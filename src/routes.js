@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import homepage from './views/homepage'
 import Register from './views/Register'
 import Login from './views/Login'
+import Expenses from './views/Expenses'
 //import Logout from './views/Logout'
 import ForgotPassword from './views/ForgotPassword'
 //import Reset from './views/Reset'
@@ -16,17 +17,15 @@ export default new VueRouter({
         
         {
             path: '/',
-            name: 'homepage',
-            component: homepage,
-            meta: {
-                requiresLogin: true
-            }
+            name: 'Login',
+            component: Login,
+            
         },
        
         {
-            path: '/login',
-            name: 'login',
-            component: Login,
+            path: '/Expenses',
+            name: 'Expenses',
+            component: Expenses,
         },
         {
             path: '/ForgotPassword',
@@ -44,10 +43,11 @@ export default new VueRouter({
             //name: 'Dashboard',
             //component: Dashboard,
         //},
-
-        
-
-
+        {
+            path: '/homepage',
+            name: 'homepoage',
+            component: homepage,
+        },
     ]
 }
 )

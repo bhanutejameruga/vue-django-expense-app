@@ -1,154 +1,197 @@
 <template>
-  <div>
-    <v-container>
-      <v-layout row>
-        <v-flex xs12>
-          <v-data-table :headers="headers" :items="expenses" sort-by="date" class="elevation-1">
-            <template v-slot:top>
-              <div class="d-flex align-center pa-4">
-                <span class="blue--text font-weight-medium">Expenses</span>
-                <v-divider class="mx-2 my-1" inset vertical style="height: 20px"></v-divider>
-                <v-spacer></v-spacer>
-                <v-dialog v-model="dialog" max-width="650px">
-                  <template v-slot:activator="{ on }">
-                    <v-btn outlined small class="blue--text font-weight-bold" v-on="on">New Expense</v-btn>
-                  </template>
-                  <v-card>
-                    <v-card-title>
-                      <span class="text-h5">{{ formTitle }}</span>
-                    </v-card-title>
 
-                    <v-card-text>
-                      <ExpenseForm
-                        :expense="editedExpense"
-                        :showCloseButton="true"
-                        :onCloseClick="close"
-                        :onSubmitClick="saveExpense"
-                        :loading="loading"
-                        ref="form"
-                      />
-                    </v-card-text>
-                  </v-card>
-                </v-dialog>
-              </div>
-            </template>
-            <template v-slot:item.value="{ item }">
-              <span>{{`${user.displayCurrency} ${item.value.toFixed(2)}`}}</span>
-            </template>
-            <template v-slot:item.action="{ item }">
-              <v-icon small class="mr-2" @click="editExpense(item)">edit</v-icon>
-              <v-icon small @click="deleteExpense(item)">delete</v-icon>
-            </template>
-          </v-data-table>
-        </v-flex>
-      </v-layout>
-    </v-container>
-  </div>
+ <form @submit.prevent="handlesubmit">
+       <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Expense Tracker App</a>
+  
+  
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item active">
+            <a class="navbar-brand"><router-link to='/'>Home</router-link></a>
+        </li>
+      </ul>
+
+      <div class="topnav-right">
+           <button class="btn btn-danger" @click.prevent="logout">Logout</button>
+      </div>
+    </div>
+  </nav>
+ <center>
+<h4>Add your Expenses</h4>
+ <div class="container">
+     
+      <div>
+        <label for="maincategory"><b>Main Category</b></label><br>
+        <select v-model="form.main_category" class="select"  name="main_category" id="main_category">
+      
+          <option>Food</option>
+          <option>Entertainment</option>
+          <option>Education</option>
+          <option>Medicine</option>
+          <option>Travel</option>
+          <option>Sports/Games</option>
+          <option>Bills</option>
+          <option>Loans</option>
+          <option>Tax</option>
+          <option>Other Expenses</option>
+        </select>
+      
+      </div>
+      <br>
+      <div>
+      <label for="subcategory"><b>Sub Category</b></label><br>
+        <input type="text" v-model="form.sub_category" name="sub_category" id="sub_category" required> 
+      </div>
+<br>
+
+      <div>
+        <label for="expenseamount"><b>Expense Amount</b></label><br>
+        <input type="number" v-model="form.expense_amount" name="expense_amount" id="expense_amount" required> 
+      </div>
+<br>
+  <div>
+       <label for="description"><b>Description</b></label><br>
+        <input type="text" v-model="form.description" name="description" id="description"  required> 
+      </div>
+      <br>
+      <div>
+      <label for="modeofpayment"><b>Mode of Payment</b></label><br>
+          <select v-model="form.mode_of_payment" class="select" name="mode_of_payment" id="mode_of_payment">
+          <option disabled value="">Please select one</option>
+          <option>Cash</option>
+          <option>Card (Visa)</option>
+          <option>Card (Master card)</option>
+          <option>Card (RuPay)</option>
+          <option>Card (others)</option>
+          <option>UPI</option>
+        </select>
+      </div>
+     <br>
+<br>
+
+     <div>
+      <label for="date"><b>Date</b></label><br>
+    <datetime format="MM/DD/YYYY" width="300px"  v-model="form.date" name="date" id="date"></datetime>
+     </div>
+
+      <br>
+      <br>
+
+      <div>
+  <button @click.prevent="submitExpense" type="submit" class="submit-btn">Save Expense</button>
+      </div>
+    </div>
+ </center></form>
+
 </template>
+
 <script>
-import { mapState, mapActions } from "vuex";
-import {
-  CREATE_EXPENSE,
-  EDIT_EXPENSE,
-  REMOVE_EXPENSE
-} from "@/store/_actiontypes";
-import ExpenseForm from "@/components/ExpenseForm";
+import datetime from 'vuejs-datetimepicker';
+import { getAPI } from '../axios-api';
 
 export default {
-  components: { ExpenseForm },
-  data: () => ({
-    loading: false,
-    dialog: false,
-    headers: [
-      { text: "Id", value: "id", align: " d-none" },
-      { text: "CategoryId", value: "categoryId", align: " d-none" },
-      { text: "TypeId", value: "typeId", align: " d-none" },
-      { text: "Value", value: "value" },
-      { text: "Date", value: "date" },
-      { text: "Category", value: "category" },
-      { text: "Type", value: "type" },
-      { text: "Description", value: "comments" },
-      { text: "Actions", value: "action", sortable: false, width: 50 }
-    ],
-    editedExpense: {
-      id: 0,
-      date: "",
-      value: "",
-      categoryId: "",
-      typeId: "",
-      comments: ""
-    },
-    defaultExpense: {
-      id: 0,
-      date: "",
-      value: "",
-      categoryId: "",
-      typeId: "",
-      comments: ""
-    }
-  }),
-  computed: {
-    ...mapState({
-      expenses: state => state.expenses.expenses,
-      user: state => state.account.user
-    }),
-
-    formTitle() {
-      return this.editedExpense.id === 0 ? "New Expense" : "Edit Expense";
+ components: { datetime },
+  data(){
+    return{
+       form:{
+         main_category: '',
+         sub_category: '',
+         expense_amount: '',
+         description: '',
+         mode_of_payment: '',
+         date: '',
+       },
+       errors:[]
     }
   },
-  watch: {
-    dialog(val) {
-      val || this.close();
-    }
-  },
-  methods: {
-    ...mapActions("expenses", [CREATE_EXPENSE, EDIT_EXPENSE, REMOVE_EXPENSE]),
 
-    editExpense(item) {
-      this.editedExpense = Object.assign({}, item);
-      this.dialog = true;
-    },
+    methods:{
 
-    deleteExpense(item) {
-      confirm("Are you sure you want to delete this item?") &&
-        this.REMOVE_EXPENSE({ id: item.id });
-    },
-
-    close() {
-      this.dialog = false;
-      this.editedExpense = Object.assign({}, this.defaultExpense);
-      this.$refs.form.reset();
-    },
-
-    saveExpense() {
-      var editedExpense = this.editedExpense;
-      this.loading = true;
-      if (editedExpense.id == 0) {
-        this.CREATE_EXPENSE({
-          expense: editedExpense
+      submitExpense(){
+        getAPI.post('/api/expenses', this.form).then(() => {
+          this.$router.push({ name:"Dashboard" });
+          console.log('expense added');
+        }).catch((error) => {
+          this.error = error.response.data.errors;
         })
-          .then(() => {
-            this.close();
-          })
-          .finally(() => {
-            this.loading = false;
-          });
-      } else {
-        this.EDIT_EXPENSE({
-          expense: editedExpense
-        })
-          .then(() => {
-            this.close();
-          })
-          .finally(() => {
-            this.loading = false;
-          });
-      }
-    }
-  }
-};
+
+      },
+        logout(){
+            getAPI.post('/api/logout/').then(() =>{
+                this.$router.push({ name: "Login" })
+            })
+        }
+    },
+
+    
+    
+}
 </script>
 
-<style>
-</style> 
+<style scoped>
+body{
+font-family: Arial, Helvetica, sans-serif;
+  background-color: white;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+.container {
+  padding: 168px;
+  padding-top: 10px;
+  padding-bottom: 1px;
+  background-color: white;
+}
+
+
+input[type=text], input[type=password], input[type=number] {
+  width: 50%;
+  padding: 6px;
+  display: inline-block;
+  border: none;
+    background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+.select{
+  width: 50%;
+  padding: 8px;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+
+}
+
+.submit-btn{
+  background-color: rgb(25, 207, 56);
+  color: white;
+  padding: 16px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 25%;
+  opacity: 0.9;
+}
+
+.clock{
+  margin-left: 4px;
+}
+
+
+
+
+</style>

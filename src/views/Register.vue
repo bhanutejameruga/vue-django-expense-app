@@ -80,38 +80,31 @@
 </template>
 
 <script>
-//import axios from "axios"
+import { getAPI } from '../axios-api'
 export default {
-  data() {
-    return {
-      form: {
-        username: "",
-        email: "",
-        password: "",
-        password_confirmation: "",
-      },
-      errors: [],
-    };
-  },
-  methods: {
-    saveForm() {
-      this.$store
-        .dispatch("Register", {
-          username: this.username,
-          email: this.email,
-          password: this.password,
-          password_confirmation: this.password_confirmation,
-        })
-        .then(() => {
-          this.$router.push({ name: " Dashboard" });
-        })
-        .catch((err) => {
-          console.log(err);
-          this.incorrectAuth = true;
-        });
+    data(){
+        return{
+            form:{
+              name: '',
+              email: '',
+              password: '',
+              password_confirmation:''
+
+            },
+            errors: []
+        }
     },
-  },
-};
+    methods:{
+          saveForm(){
+            getAPI.post('/api/register', this.form).then(() => {
+                 this.$router.push({ name: "Login" })
+                 console.log('Saved');
+            }).catch((error) => {
+              this.errors = error.response.data.errors;
+            })
+          }
+    }
+}
 </script>
 <style scoped>
 body {
