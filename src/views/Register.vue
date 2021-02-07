@@ -12,7 +12,7 @@
 
           <div class="topnav-right">
             <a class="navbar-brand"
-              ><router-link to="/login">Login</router-link></a
+              ><router-link to="/">Login</router-link></a
             >
           </div>
         </div>
@@ -30,8 +30,8 @@
             <span class="" v-if="errors.name">{{ errors.name[0] }}</span>
             <input
               type="text"
-              placeholder="Full Name"
-              v-model="form.name"
+              placeholder="UserName"
+              v-model="form.username"
               required
             />
 
@@ -56,19 +56,22 @@
               id="password"
               required
             />
-
-            <span class="" v-if="errors.password_confirmation">{{
-              errors.password_confirmation[0]
-            }}</span
-            ><br />
+            <span class="" v-if="errors.name">{{ errors.name[0] }}</span>
             <input
-              type="password"
-              placeholder="Repeat Your Password"
-              name="password_confirmation"
-              v-model="form.password_confirmation"
-              id="password_confirmation"
+              type="text"
+              placeholder="FirstName"
+              v-model="form.first_name"
               required
             />
+             <span class="" v-if="errors.name">{{ errors.name[0] }}</span>
+            <input
+              type="text"
+              placeholder="LastName"
+              v-model="form.last_name"
+              required
+            />
+
+            
             <button @click.prevent="saveForm" type="submit" class="registerbtn">
               Register
             </button>
@@ -85,10 +88,11 @@ export default {
     data(){
         return{
             form:{
-              name: '',
+              username: '',
               email: '',
               password: '',
-              password_confirmation:''
+              first_name:'',
+              last_name:''
 
             },
             errors: []
@@ -96,7 +100,9 @@ export default {
     },
     methods:{
           saveForm(){
-            getAPI.post('/api/register', this.form).then(() => {
+            getAPI.post('/api/register/',
+            
+            this.form).then(() => {
                  this.$router.push({ name: "Login" })
                  console.log('Saved');
             }).catch((error) => {

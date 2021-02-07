@@ -14,36 +14,38 @@
       <input
         type="email"
         class="form-control"
-        v-model="email"
-        placeholder="email"
+        v-model="form.email"
+        placeholder="emailid"
       >
     </div>
 
-    <button class="btn btn-primary btn-block">submit</button>
-  </form>
+    <button @click.prevent="submitEmail" type="submit" class="submit-btn " >submit</button>
+     </form>
         </div>
       </div>
 </div>
 </div>
 </template>
 <script>
+import { getAPI } from '../axios-api';
 export default {
   name: "ForgotPassword",
   data() {
     return {
+      form:{
       email: "",
-      incorrectAuth: false,
+      },
+      errors :[],
+      incorrectAuth:false,
     };
   },
   methods: {
-    ForgotPassword() {
-      this.$store
-        .dispatch("ForgotPassword", {
-          email: this.email,
+    submitEmail() {
+      getAPI.post('api/password_reset/',this.form
+        ).then(() => {
+          this.$router.push({ name:"Login" });
         })
-        .then(() => {
-          this.$router.push({ name: "Login" });
-        })
+        
         .catch((err) => { 
           console.log(err);
           this.incorrectAuth = true;

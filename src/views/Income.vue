@@ -1,9 +1,8 @@
-<template>
+ <template>
 
  <form @submit.prevent="handlesubmit">
        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Expense Tracker App</a>
-  
+    <a class="navbar-brand" href="#">Expense Manager App</a>
   
     <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
@@ -18,59 +17,28 @@
     </div>
   </nav>
  <center>
-<h4>Add your Expenses</h4>
+
  <div class="container">
-     
      <div>
-        <label for="expenseamount"><b>Expense Amount</b></label><br>
-        <input type="number" v-model="form.amount" name="amount" id="amount" required> 
+       <label for="amount"><b>Monthly Income</b></label><br>
+        <input type="number" v-model="form.amount" name="amount" id="amount"  required> 
       </div>
       <br>
       <div>
-        <label for="maincategory"><b>Main Category</b></label><br>
-        <select v-model="form.main_category" class="select"  name="main_category" id="main_category">
-      
-          <option>Food</option>
-          <option>Entertainment</option>
-          <option>Education</option>
-          <option>Medicine</option>
-          <option>Travel</option>
-          <option>Sports/Games</option>
-          <option>Bills</option>
-          <option>Loans</option>
-          <option>Tax</option>
-          <option>Other Expenses</option>
-        </select>
-      
+      <label for="source_of_income"><b>Source of Income</b></label><br>
+        <input type="text" v-model="form.source_of_income" name="source_of_income" id="source_of_income" required> 
       </div>
       <br>
       <div>
-      <label for="subcategory"><b>Sub Category</b></label><br>
-        <input type="text" v-model="form.sub_category" name="sub_category" id="sub_category" required> 
-      </div>
-
-
-      
-<br>
-  <div>
        <label for="description"><b>Description</b></label><br>
         <input type="text" v-model="form.description" name="description" id="description"  required> 
       </div>
-      <br>
       <div>
-      <label for="modeofpayment"><b>Mode of Payment</b></label><br>
-          <select v-model="form.mode_of_payment" class="select" name="mode_of_payment" id="mode_of_payment">
-          <option disabled value="">Please select one</option>
-          <option>Cash</option>
-          <option>Card (Visa)</option>
-          <option>Card (Master card)</option>
-          <option>Card (RuPay)</option>
-          <option>Card (others)</option>
-          <option>UPI</option>
-        </select>
+       <label for="recieved_source"><b>recieved_source</b></label><br>
+        <input type="text" v-model="form.received_source" name="recieved_source" id="recieved_source"  required> 
       </div>
-     <br>
-<br>
+      
+      <br>
 
      <div>
       <label for="date"><b>Date</b></label><br>
@@ -82,11 +50,12 @@
        min="09:00" max="18:00" required>
      </div>
 
-      <br>
+<br>
+       
       <br>
 
       <div>
-  <button @click.prevent="submitExpense" type="submit" class="submit-btn">Save Expense</button>
+  <button @click.prevent="submitIncome" type="submit" class="submit-btn">Save Income</button>
       </div>
     </div>
  </center></form>
@@ -94,22 +63,20 @@
 </template>
 
 <script>
-import datetime from 'vuejs-datetimepicker';
+import datetime from 'vuejs-datetimepicker'
 import { getAPI } from '../axios-api';
-
-
 export default {
- components: { datetime },
+    components: { datetime },
   data(){
     return{
        form:{
-         amount:'',
-         main_category: '',
-         sub_category: '',
+         //user_id:'{{ user.id }}',
+         amount: '',
+         source_of_income: '',
          description: '',
-         mode_of_payment: '',
-         date: '',
-         time:'',
+         received_source:'',
+         date:'',
+         time:''
        },
        errors:[]
     }
@@ -117,21 +84,22 @@ export default {
 
     methods:{
 
-      submitExpense(){
-        getAPI.post('/api/expenses/', this.form).then(() => {
+      submitIncome(){
+        getAPI.post('api/income/', this.form).then(() => {
           this.$router.push({ name:"Dashboard" });
-          console.log('expense added');
+          console.log('income added');
         }).catch((error) => {
           this.error = error.response.data.errors;
         })
 
       },
         logout(){
-            getAPI.post('/api/logout/').then(() =>{
-                this.$router.push({ name: "Login" })
+            getAPI.post('/api/logout').then(() =>{
+                this.$router.push({ name: "Home" })
             })
         }
-    },
+    }
+     
 }
 </script>
 
@@ -194,7 +162,7 @@ hr {
 }
 
 .clock{
-  margin-left: 4px;
+  margin-left: -81px;
 }
 
 

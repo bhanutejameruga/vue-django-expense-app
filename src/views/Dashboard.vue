@@ -1,146 +1,158 @@
 <template>
   <div>
-    <v-container>
-      <v-layout row justify-space-between>
-        <v-flex xs12 md6>
-          <v-card class="pa-2 mr-2" raised min-height="350px">
-            <div class="blue--text px-2 py-1 text-capitalize font-weight-medium">Add New Expense</div>
-            <v-divider></v-divider>
-            <ExpenseForm
-              :expense="expense"
-              :onSubmitClick="saveExpense"
-              :loading="loading"
-              ref="form"
-            />
-          </v-card>
-        </v-flex>
-        <v-flex xs12 md6>
-          <v-card
-            :class="{'pa-2 mr-2 mt-2': $vuetify.breakpoint.smAndDown, 'pa-2 mr-2': $vuetify.breakpoint.mdAndUp}"
-            tile
-            min-height="340px"
-            height="100%"
-          >
-            <div
-              class="blue--text px-2 py-1 text-capitalize font-weight-medium"
-            >Budget (Current Month)</div>
-            <v-divider></v-divider>
-            <DoughnutChart
-              :height="75"
-              :theme="user.theme"
-              :showLabel="true"
-              :showLabelLines="true"
-              :seriesData="monthlyBudget.data"
-              :centerY="50"
-              :pieRadiusOuter="75"
-            />
-            <div class="d-flex justify-space-around text-subtitle-2 px-12 mx-12">
-              <div>
-                <div>Limit</div>
-                <div>{{`${user.displayCurrency} ${monthlyBudget.totalBudget}`}}</div>
-              </div>
-              <div>
-                <div>Spent</div>
-                <div>{{`${user.displayCurrency} ${monthlyBudget.totalSpent}`}}</div>
-              </div>
-            </div>
-          </v-card>
-        </v-flex>
-        <v-flex xs12 md12>
-          <v-container px-0 pb-0>
-            <v-card class="pa-2 mr-2" tile>
-              <div
-                class="blue--text px-2 py-1 text-capitalize font-weight-medium"
-              >Budgets By Categories (Current Month)</div>
-              <v-divider></v-divider>
-              <div class="category-budgets">
-                <div
-                  v-for="budget in monthlyBudgetsByCategory"
-                  :key="budget.name"
-                  class="category-budgets-budget"
-                >
-                  <DoughnutChart
-                    :titleText="budget.name"
-                    :showTitle="true"
-                    :height="90"
-                    :titleFontSize="14"
-                    :theme="user.theme"
-                    :showTooltip="false"
-                    :seriesData="budget.monthlyBudget"
-                  />
-                </div>
-              </div>
-            </v-card>
-          </v-container>
-        </v-flex>
-        <v-flex xs12 md12>
-          <v-flex>
-            <v-container>
-              <v-layout row wrap>
-                <v-flex xs12 md12>
-                  <v-card class="pa-2 mr-2" tile>
-                    <div
-                      class="blue--text px-2 py-1 text-capitalize font-weight-medium"
-                    >Breakdown (Current Year)</div>
-                    <v-divider></v-divider>
-                    <v-container>
-                      <v-layout row wrap>
-                        <v-flex xs12 md6 style="min-height:340px;height=100%">
-                          <BarChart
-                            :theme="user.theme"
-                            titleText="Expenses"
-                            :seriesData="yearlyExpenses"
-                          />
-                        </v-flex>
-                        <v-flex xs12 md6 style="min-height:340px;height=100%">
-                          <PieChart
-                            :theme="user.theme"
-                            titleText="Category"
-                            :seriesData="categoryExpenses"
-                          />
-                        </v-flex>
-                      </v-layout>
-                    </v-container>
-                  </v-card>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-flex>
-        </v-flex>
-      </v-layout>
-    </v-container>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ 
+ <nav class="navbar navbar-expand-lg navbar-dark bg-info">
+    <a class="navbar-brand" href="">Expense Manager App</a>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item active">
+            <a class="navbar-brand"><router-link to='/'>Home</router-link></a>
+        </li>
+      </ul>
+      <div class="topnav-right">
+          <h3><b>Welcome {{user.Username}}.</b></h3>
+          
+   
+      </div>
+    </div>
+  </nav><br>
+<!-- SIDEBAR -->
+      <b-button v-b-toggle.sidebar-variant>Click Here</b-button><br>
+   
+    <!--<center><h2><router-link to='/profile' style="color:black"><b>Check Your Profile</b></router-link></h2></center>-->
+
+<center>
+     <header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-dashboard"></i> My Dashboard</b></h5>
+  </header>
+
+  <div class="w3-row-padding w3-margin-bottom" style="margin-left:370px">
+    
+    <div class="w3-quarter">
+      <div class="w3-container w3-blue w3-padding-16">
+       
+        <div class="w3-clear"></div>
+             <h4><td>Your Budget Allocation</td>
+             <br>
+             <td>Rs. {{addIncome}}</td></h4>
+ 
+      </div>
+    </div>
+ <div class="w3-quarter">
+      <div class="w3-container w3-red w3-padding-16">
+    
+        <div class="w3-clear"></div>
+        
+             <h4><td>Your Expenses</td>
+             <br> 
+             <td>Rs. {{addExpense}} </td></h4>
+      
+       
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-orange w3-text-white w3-padding-16">
+
+        <div class="w3-clear"></div>
+       <h4><td>Your Balance</td>
+       <br>
+       <td>Rs. {{addIncome - addExpense}}</td></h4>
+      </div>
+    </div>
   </div>
+ 
+ 
+</center>
+
+    <b-sidebar id="sidebar-variant" bg-variant="info"  text-variant="light" shadow>
+                  <h2> Welcome {{user.username}} ,</h2>
+    <div class="px-3 py-2">
+        <p>
+        
+        </p>
+        <nav class="mb-3">
+            <b-nav vertical> <br><br>
+             <h5><router-link  to='/Profile' style="color:white"><b>My Account</b></router-link></h5><hr>
+             <h5><router-link  to='/Income' style="color:white"><b>+ Add Your Income</b></router-link></h5><hr>
+             <h5><router-link  to='/Expenses' style="color:white"><b>+ Add Your Expense</b></router-link></h5><hr>
+             <h5><router-link  to='/Daybook' style="color:white"><b>View Your Daybook</b></router-link></h5><hr>
+             <!-- <button @click="$router.push('income')" class="btn btn-success"><b>+ Add Your Income</b></button><br><br>
+             <button @click="$router.push('expense')" class="btn btn-danger"><b>+ Add Your Expense</b></button><br>
+             <td> <h1><router-link to='/daybook'><b>Day Book</b></router-link></h1></td>-->
+            </b-nav>
+        </nav>
+        
+    </div>
+    </b-sidebar>
+  </div>
+  
 </template>
 <script>
-import { CREATE_EXPENSE } from "@/store/_actiontypes";
-//import ExpenseForm from "@/components/ExpenseForm";
-import mapActions  from "vuex";
+import { getAPI } from '../axios-api';
 export default {
-  data() {
-    return {
-      loading: false,
-      dateMenu: false,
-      expense: {}
-    };
-  },
-  methods: {
-    ...mapActions("expenses", [CREATE_EXPENSE]),
-    saveExpense() {
-      this.loading = true;
-      this.CREATE_EXPENSE({
-        expense: this.expense
-      })
-        .then(() => {
-          this.expense = {};
-          this.$refs.form.reset();
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+    data(){
+        return{
+            user: {},
+            Expense:{},
+            Income:{},
+            addIncome:{},
+            addExpense:{}
+        }
+    },
+    methods:{
+   
+   loadUsers(){
+     getAPI.get("api/expenses/").then(({ data }) => (this.expenses = data));
+   },
+  loadIncome()
+        {
+          getAPI.get("api/income/").then(({  data }) => (this.incomes = data));
+        },
+
+
+        Expenses(){
+            getAPI.post('/api/expenses/').then(() => {
+                this.$router.push({ name: "Expenses" })
+            })
+        },
+
+         income(){
+          getAPI.post('/api/income/').then(() => {
+            this.router.push({ name: "Login" })
+          })
+        },
+
+     
+        
+        
+    },
+
+ created()
+   {
+     this.loadUsers();
+      this.loadIncome();
+   },
+
+    mounted(){
+        getAPI.get('/api/profile/').then((response) => {
+            this.user = response.data;
+        }),
+         getAPI.get('/api/expenses/total_expenses/').then((response) => {
+           this.addExpense = response.data;
+         }),
+         getAPI.get('/api/income/total_income/').then((response) => {
+           this.addIncome = response.data;
+         })
     }
-  }
-};
+}
 </script>
+
 <style scoped>
+
 
 </style>

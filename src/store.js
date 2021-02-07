@@ -9,11 +9,14 @@ export default new Vuex.Store({
      accessToken: null,
      refreshToken: null,
      APIData: ''
+   
   },
   mutations: {
-    updateStorage (state, { access, refresh }) {
-      state.accessToken = access
-      state.refreshToken = refresh
+    updateStorage (state, { token, expire }) {
+      state.accessToken = token;
+      state.refreshToken = expire;
+      localStorage.setItem('token', token);
+      localStorage.setItem('expire', expire);
     },
     destroyToken (state) {
       state.accessToken = null
@@ -38,7 +41,7 @@ export default new Vuex.Store({
           password: usercredentials.password
         })
           .then(response => {
-             context.commit('updateStorage', { access: response.data.access, refresh: response.data.refresh }) 
+             context.commit('updateStorage', { token: response.data.token, expire: response.data.expiry }) 
             resolve()
           })
           .catch(err => {
@@ -46,7 +49,8 @@ export default new Vuex.Store({
           })
       })
   }
-     
+  //localStorage.setItem('token', accessToken ):
+  //localStorage.setItem('expire', refreshToken);     
 
   }
 })
