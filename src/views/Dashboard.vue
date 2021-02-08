@@ -11,7 +11,7 @@
     <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
         <li class="nav-item active">
-            <a class="navbar-brand"><router-link to='/'>Home</router-link></a>
+            <a class="navbar-brand"><router-link to='/Dashboard'></router-link></a>
         </li>
       </ul>
       <div class="topnav-right">
@@ -24,8 +24,7 @@
 <!-- SIDEBAR -->
       <b-button v-b-toggle.sidebar-variant>Click Here</b-button><br>
    
-    <!--<center><h2><router-link to='/profile' style="color:black"><b>Check Your Profile</b></router-link></h2></center>-->
-
+   
 <center>
      <header class="w3-container" style="padding-top:22px">
     <h5><b><i class="fa fa-dashboard"></i> My Dashboard</b></h5>
@@ -81,9 +80,7 @@
              <h5><router-link  to='/Income' style="color:white"><b>+ Add Your Income</b></router-link></h5><hr>
              <h5><router-link  to='/Expenses' style="color:white"><b>+ Add Your Expense</b></router-link></h5><hr>
              <h5><router-link  to='/Daybook' style="color:white"><b>View Your Daybook</b></router-link></h5><hr>
-             <!-- <button @click="$router.push('income')" class="btn btn-success"><b>+ Add Your Income</b></button><br><br>
-             <button @click="$router.push('expense')" class="btn btn-danger"><b>+ Add Your Expense</b></button><br>
-             <td> <h1><router-link to='/daybook'><b>Day Book</b></router-link></h1></td>-->
+            
             </b-nav>
         </nav>
         

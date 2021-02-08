@@ -31,6 +31,8 @@
         <select v-model="form.main_category" class="select"  name="main_category" id="main_category">
       
           <option>Food</option>
+           <option>Fitness</option>
+            <option>Rent/Lease</option>
           <option>Entertainment</option>
           <option>Education</option>
           <option>Medicine</option>
@@ -62,10 +64,10 @@
           <select v-model="form.mode_of_payment" class="select" name="mode_of_payment" id="mode_of_payment">
           <option disabled value="">Please select one</option>
           <option>Cash</option>
-          <option>Card (Visa)</option>
-          <option>Card (Master card)</option>
-          <option>Card (RuPay)</option>
-          <option>Card (others)</option>
+          <option>NEFT/IMPS Transfer</option>
+          <option>Debit Card </option>
+          <option>Credit Card</option>
+          <option>Cheque</option>
           <option>UPI</option>
         </select>
       </div>

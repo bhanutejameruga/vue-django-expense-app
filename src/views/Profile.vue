@@ -18,15 +18,15 @@
   </nav>
 
     <br>
-    <center><h1>
-     Name: {{ this.username }}<br>
-     Email: {{User.email}}<br>
-     firstname: {{User.first_name}}<br>
-     lastname: {{User.last_name}}<br>
-     datejoined: {{User.date_joined}}<br>
-     </h1><br>
+    <center><h3 v-for="User in Users" :key="User.id">
+     Name: {{ User.username }}<br>
+     Email: {{ User.email }}<br>
+     firstname: {{ User.first_name }}<br>
+     lastname: {{ User.last_name }}<br>
+     datejoined: {{ User.date_joined }}<br>
+     </h3><br>
      <button @click="$router.push('Changepassword')" class="btn btn-primary"><b>Update Password</b></button><br><br>
-     <button @click="$router.push('ForgotPassword')" class="btn btn-danger"><b>Reset Password</b></button>
+    
          
 </center>
 </div>
@@ -38,9 +38,7 @@ import { getAPI } from '../axios-api'
 export default {
     data(){
         return{
-            User:{},
-            username:null,
-            
+            Users:'',
         }
     },
 
@@ -49,12 +47,19 @@ export default {
             getAPI.post('/api/logout/').then(() =>{
                 this.$router.push({ name: "Login" })
             })
-        }
+        },
+          
+        loadUser()
+        {
+          getAPI.get("api/profile/").then(({  data }) => (this.Users = data));
+        },
+        
+
     },
 
     mounted(){
         getAPI.get('/api/profile/').then((response) => {
-            this.User = response.data
+            this.Users = response.data
         })
         }
 

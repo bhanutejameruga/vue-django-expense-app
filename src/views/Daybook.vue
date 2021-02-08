@@ -39,7 +39,7 @@
          
           </table><br>
            
-                
+                  
 
               <h2><router-link to='/Dashboard' tag="button" class="btn btn-info"><b>Go Back to Dashboard</b></router-link></h2>
               <center><b>or</b></center>
@@ -59,7 +59,7 @@ export default {
     return{
            expenses: {},
            user: {},
-           //addexpense:null,
+           
          
     }
   },
@@ -83,12 +83,16 @@ export default {
 
     created(){
          this.loadUsers();
+         this.expense();
     },
 
   mounted(){
         getAPI.get('/api/Profile').then((response) => {
             this.user = response.data
-        })
+        }),
+        getAPI.get('/api/addexpense').then((response) => {
+           this.addExpense = response.data;
+         })
         
     }
     
