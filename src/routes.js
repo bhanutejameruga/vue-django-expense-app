@@ -31,7 +31,6 @@ export default new VueRouter({
             path: '/Incomerecord',
             name: 'Incomerecord',
             component: Incomerecord,
-            
         },
        
         {

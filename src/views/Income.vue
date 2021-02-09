@@ -7,7 +7,7 @@
     <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
       <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
         <li class="nav-item active">
-            <a class="navbar-brand"><router-link to='/'>Home</router-link></a>
+            <a class="navbar-brand"><router-link to='/Dashboard'>Home</router-link></a>
         </li>
       </ul>
 
